@@ -34,6 +34,8 @@ class Order {
  public:
   TimeInForce const         time_in_force;
   Typing::OrderIdType const id;
+  Side                      side;
+  Typing::ProductIdType     product;
   Typing::PriceType         price;
   Typing::QuantityType      quantity;
 
