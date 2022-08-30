@@ -25,8 +25,9 @@ using QuoteBoard = std::map<Typing::TimeType, Quote>;
 
 class Product::Opaque {
  public:
-  detail::QuoteBoard            quote_board_;
-  detail::QuoteBoard::iterator *quote_it_;
+  detail::QuoteBoard           quote_board_;
+  bool                         set_started = false;
+  detail::QuoteBoard::iterator quote_it_;
 };
 
 Product::Product() noexcept : opaque_{std::unique_ptr<Opaque>()} {
@@ -62,7 +63,10 @@ void Product::SetTimestamp(Typing::TimeType time) noexcept {
     /// TODO: likely
     auto find = opaque_->quote_board_.upper_bound(time);
     if (find != opaque_->quote_board_.begin()) {
-      opaque_->quote_it_ = &find;
+      opaque_->set_started = true;
+      opaque_->quote_it_ = --find;
+    } else {
+      opaque_->set_started = false;
     }
   }
 }
@@ -70,10 +74,10 @@ void Product::SetTimestamp(Typing::TimeType time) noexcept {
 Typing::TimeType Product::Next() const noexcept {
   if (nullptr != opaque_) {
     /// TODO: likely
-    if (opaque_->quote_it_ == nullptr) {
+    if (!opaque_->set_started) {
       return opaque_->quote_board_.begin()->first;
     } else {
-      auto next = *opaque_->quote_it_;
+      auto next = opaque_->quote_it_;
       return (++next)->first;
     }
   }
@@ -85,30 +89,25 @@ Typing::TimeType Product::Iterate() noexcept {
     /// TODO: unlikely
     return 0;
   }
-
   /// modify iterations
-  if (opaque_->quote_it_ == nullptr) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Waddress-of-temporary"
-    /// FIXME: assume the quote is not mutable after ::Iterate.
-    opaque_->quote_it_ = &opaque_->quote_board_.begin();
-#pragma GCC diagnostic pop
+  if (!opaque_->set_started) {
+    opaque_->set_started = true;
+    opaque_->quote_it_ = opaque_->quote_board_.begin();
   } else {
-    opaque_->quote_it_ = &(++(*opaque_->quote_it_));
+    ++opaque_->quote_it_;
   }
-
   /// calculate the next timestamp
-  auto next = *opaque_->quote_it_;
+  auto next = opaque_->quote_it_;
   return (++next)->first;
 }
 
 Typing::QuantityType Product::TryMatch(Order const &order) const noexcept {
-  if (nullptr == opaque_ || opaque_->quote_it_ == nullptr) {
+  if (nullptr == opaque_ || !opaque_->set_started) {
     /// TODO: unlikely
     return 0;
   }
   /// Try to match the order but not effect on map
-  auto &quote = (*opaque_->quote_it_)->second;
+  auto &quote = opaque_->quote_it_->second;
   if (order.side == Side::kBid && order.price >= quote.offer_price) {
     return std::min(quote.offer_quantity, order.quantity);
   } else if (order.side == Side::kOffer && order.price <= quote.bid_price) {
@@ -118,12 +117,12 @@ Typing::QuantityType Product::TryMatch(Order const &order) const noexcept {
 }
 
 void Product::Match(Order const &order) noexcept {
-  if (nullptr == opaque_ || opaque_->quote_it_ == nullptr) {
+  if (nullptr == opaque_ || !opaque_->set_started) {
     /// TODO: unlikely
     return;
   }
   /// match the order and actually effect on map
-  auto &quote = (*opaque_->quote_it_)->second;
+  auto &quote = opaque_->quote_it_->second;
   if (order.side == Side::kBid && order.price >= quote.offer_price) {
     quote.offer_quantity -= std::min(quote.offer_quantity, order.quantity);
   } else if (order.side == Side::kOffer && order.price <= quote.bid_price) {
