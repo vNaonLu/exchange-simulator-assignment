@@ -16,7 +16,7 @@ struct Typing {
   using TimeType      = uint64_t;
   using ProductIdType = std::string;
   using OrderIdType   = uint64_t;
-  using PriceType     = int32_t;
+  using PriceType     = float;
   using QuantityType  = int32_t;
 };
 
