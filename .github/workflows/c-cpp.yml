@@ -1,0 +1,35 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v1
+    - run: git submodule update --init --recursive
+    - run: |
+          pip install cpplint
+          sudo apt update
+          sudo apt install gcc-11 g++-11
+    
+    - name: Check cpplint
+      run:  cpplint ./include/exchange/* ./src/*
+    
+    - name: Configure CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      shell: bash
+      env:
+        CC:  gcc-11
+        CXX: g++-11
+      
+    - name: Build
+      run: cmake --build build -j
+      

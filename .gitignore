@@ -1,0 +1,11 @@
+# build
+
+build
+
+# local
+
+__MACOSX
+.DS_Store
+.local
+.vscode
+tags
