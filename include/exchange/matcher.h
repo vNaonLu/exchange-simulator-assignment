@@ -27,20 +27,20 @@ class Matcher {
 
   /**
    * @brief Construct a new Matcher object.
-   * 
+   *
    * @param exchange Specify the target exchange object.
    */
   explicit Matcher(Exchange *exchange) noexcept;
 
   /**
    * @brief Destroy the Matcher object.
-   * 
+   *
    */
   ~Matcher() noexcept;
 
   /**
    * @brief Insert an order in to matcher service.
-   * 
+   *
    * @param order Specify the target order.
    * @return Indicate whether the insert operation is success.
    */
@@ -48,7 +48,7 @@ class Matcher {
 
   /**
    * @brief Blocking start to execute orders in exchange,
-   * 
+   *
    * @param callback Specify the callback to handle execution reports.
    */
   void Execute(MatchCallback callback) noexcept;
