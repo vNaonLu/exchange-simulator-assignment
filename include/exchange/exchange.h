@@ -23,19 +23,19 @@ class Exchange {
  public:
   /**
    * @brief Construct a new Exchange object.
-   * 
+   *
    */
   Exchange() noexcept;
 
   /**
    * @brief Destroy the Exchange object.
-   * 
+   *
    */
   ~Exchange() noexcept;
 
   /**
    * @brief Load the file from specified file location.
-   * 
+   *
    * @param file Specify the target file location.
    * @return Indicate whether the load operation is success.
    */
@@ -43,7 +43,7 @@ class Exchange {
 
   /**
    * @brief Obtain the product stored in the database.
-   * 
+   *
    * @param product_id Specify the unique id of product.
    * @return A pointer to product if found, nullptr otherwise.
    */
