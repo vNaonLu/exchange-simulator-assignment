@@ -51,7 +51,7 @@ There is only one executable `exchange-simulator` in the building directory afte
 $ ./build/exchange-simulator <latency> <quotez_file> <order_file>
 ```
 
-- the `latency` is used to simulate the elapsed time of transfer to the exchange.
+- the `latency` is in millisecond and is used to simulate the elapsed time of transfer to the exchange.
 
 - the `quote_file` is a file containing a quote information for a sequence of time and the format of `quote_file` looks like:
 
@@ -77,16 +77,11 @@ $ ./build/exchange-simulator <latency> <quotez_file> <order_file>
 A simple output may looks like:
 
 ```sh
-$ ./build/exchange-simulator 0 market.txt orders.txt
-orderId:   101534018 [canceled]
-orderId:   901534018 [canceled]
-orderId:  1001534018 [canceled]
-orderId:  1101534018 [canceled]
-orderId:  1201534018 [canceled]
-orderId:  1301534018 [filled] price=2938.000 qty=10
+$ ./build/exchange-simulator 1000 market.txt orders.txt
 orderId:  1401534018 [filled] price=2937.000 qty=10
 orderId:  1501534018 [canceled]
 orderId:  1601534018 [partial filled] price=2935.000 qty=3
+orderId:  1601534018 [canceled]
 orderId:  1701534018 [filled] price=2934.000 qty=10
 orderId:  1801534018 [canceled]
 orderId:  1901534018 [filled] price=2927.000 qty=10
