@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS_DEBUG   "-g")
 file(GLOB PROJECT_SOURCE   ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc)
 set(PROJECT_INCLUDES       ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
-add_library(
+add_executable(
   ${PROJECT_NAME}
   ${PROJECT_SOURCE}
 )

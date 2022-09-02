@@ -50,8 +50,9 @@ class Matcher {
    * @brief Blocking start to execute orders in exchange,
    *
    * @param callback Specify the callback to handle execution reports.
+   * @param latency Specify the latency which the order transaction takes.
    */
-  void Execute(MatchCallback callback) noexcept;
+  void Execute(MatchCallback callback, Typing::TimeType latency = 0) noexcept;
 };
 
 }  // namespace exchange

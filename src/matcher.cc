@@ -32,7 +32,7 @@ bool Matcher::InsertOrder(Order const &order) noexcept {
   return true;
 }
 
-void Matcher::Execute(MatchCallback callback) noexcept {
+void Matcher::Execute(MatchCallback callback, Typing::TimeType latency) noexcept {
   if (nullptr == callback || nullptr == opaque_) {
     /// TODO: unlikely
     return;
@@ -46,6 +46,7 @@ void Matcher::Execute(MatchCallback callback) noexcept {
   Product               *product = nullptr;
   ExecutionReport        report;
   for (auto &order : opaque_->orders) {
+    auto current_time = order.trade_time + latency * 1'000;
     report.order_id   = order.id;
     report.product_id = order.product;
 
@@ -61,11 +62,11 @@ void Matcher::Execute(MatchCallback callback) noexcept {
         continue;
       }
       pid = &order.product;
-      product->SetTimestamp(order.trade_time);
+      product->SetTimestamp(current_time);
     }
     /// Iterate to the proper time
     auto next_time = product->Next();
-    while (next_time < order.trade_time) {
+    while (next_time < current_time) {
       next_time = product->Iterate();
     }
     /// Try to match and get the proper result

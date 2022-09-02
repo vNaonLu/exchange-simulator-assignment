@@ -30,7 +30,7 @@ class Product::Opaque {
   detail::QuoteBoard::iterator quote_it_;
 };
 
-Product::Product() noexcept : opaque_{std::unique_ptr<Opaque>()} {
+Product::Product() noexcept : opaque_{std::make_unique<Opaque>()} {
   assert(nullptr != opaque_);
 }
 
