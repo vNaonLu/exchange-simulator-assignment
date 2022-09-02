@@ -48,7 +48,7 @@ There is only one executable `exchange-simulator` in the building directory afte
 
 ```sh
 # in the project root directory
-$ ./build/exchange-simulator <latency> <quotez_file> <order_file>
+$ ./build/exchange-simulator <latency> <quote_file> <order_file>
 ```
 
 - the `latency` is in millisecond and is used to simulate the elapsed time of transfer to the exchange.
