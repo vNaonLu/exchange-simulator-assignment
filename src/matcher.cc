@@ -88,10 +88,10 @@ void Matcher::Execute(MatchCallback    callback,
           callback(report);
           product->Match(order);
           /// The left shares are canceled.
-          // report.result   = ExecutionReport::kCanceled;
-          // report.quantity = order.quantity - mat_qty;
-          // report.price    = 0.0;
-          // callback(report);
+          report.result   = ExecutionReport::kCanceled;
+          report.quantity = order.quantity - mat_qty;
+          report.price    = 0.0;
+          callback(report);
         } else {
           /// fail to match the order.
           report.result   = ExecutionReport::kCanceled;

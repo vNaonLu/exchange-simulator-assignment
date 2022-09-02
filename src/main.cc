@@ -64,7 +64,12 @@ int main(int argc, char **argv) {
     }
 
     order.trade_time = ConvertTime(date);
-    order.product    = product;
+    if (order.trade_time == 0) {
+      cerr << "(error) invalid timestamp: " << date << endl;
+      return EXIT_FAILURE;
+    }
+
+    order.product = product;
     if (std::strcmp(tif, "IOCOrder") == 0) {
       order.time_in_force = exchange::TimeInForce::kIOC;
     } else {
@@ -140,7 +145,8 @@ Typing::TimeType ConvertTime(char const *time) noexcept {
   using std::chrono::system_clock;
   int     ms;
   std::tm t;
-  auto    res =
+  std::memset(&t, 0, sizeof(t));
+  auto res =
       std::sscanf(time, "%4d-%2d-%2d %2d:%2d:%2d.%3d", &t.tm_year, &t.tm_mon,
                   &t.tm_mday, &t.tm_hour, &t.tm_min, &t.tm_sec, &ms);
 
