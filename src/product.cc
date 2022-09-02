@@ -30,7 +30,7 @@ class Product::Opaque {
   detail::QuoteBoard::iterator quote_it_;
 };
 
-Product::Product() noexcept : opaque_{std::unique_ptr<Opaque>()} {
+Product::Product() noexcept : opaque_{std::make_unique<Opaque>()} {
   assert(nullptr != opaque_);
 }
 
@@ -64,7 +64,7 @@ void Product::SetTimestamp(Typing::TimeType time) noexcept {
     auto find = opaque_->quote_board_.upper_bound(time);
     if (find != opaque_->quote_board_.begin()) {
       opaque_->set_started = true;
-      opaque_->quote_it_ = --find;
+      opaque_->quote_it_   = --find;
     } else {
       opaque_->set_started = false;
     }
@@ -92,7 +92,7 @@ Typing::TimeType Product::Iterate() noexcept {
   /// modify iterations
   if (!opaque_->set_started) {
     opaque_->set_started = true;
-    opaque_->quote_it_ = opaque_->quote_board_.begin();
+    opaque_->quote_it_   = opaque_->quote_board_.begin();
   } else {
     ++opaque_->quote_it_;
   }
@@ -101,19 +101,22 @@ Typing::TimeType Product::Iterate() noexcept {
   return (++next)->first;
 }
 
-Typing::QuantityType Product::TryMatch(Order const &order) const noexcept {
+std::pair<Typing::QuantityType, Typing::PriceType> Product::TryMatch(
+    Order const &order) const noexcept {
   if (nullptr == opaque_ || !opaque_->set_started) {
     /// TODO: unlikely
-    return 0;
+    return std::make_pair(0, 0.0);
   }
   /// Try to match the order but not effect on map
   auto &quote = opaque_->quote_it_->second;
   if (order.side == Side::kBid && order.price >= quote.offer_price) {
-    return std::min(quote.offer_quantity, order.quantity);
+    return std::make_pair(std::min(quote.offer_quantity, order.quantity),
+                          quote.offer_price);
   } else if (order.side == Side::kOffer && order.price <= quote.bid_price) {
-    return std::min(quote.bid_quantity, order.quantity);
+    return std::make_pair(std::min(quote.bid_quantity, order.quantity),
+                          quote.bid_price);
   }
-  return 0;
+  return std::make_pair(0, 0.0);
 }
 
 void Product::Match(Order const &order) noexcept {

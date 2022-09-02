@@ -14,14 +14,22 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v1
+    - uses: DoozyX/clang-format-lint-action@v0.14
+      with:
+        source: '.'
+        exclude: './third_party ./external'
+        extensions: 'h,cpp'
+        clangFormatVersion: 14
+
     - run: git submodule update --init --recursive
     - run: |
           pip install cpplint
           sudo apt update
           sudo apt install gcc-11 g++-11
     
-    - name: Check cpplint
-      run:  cpplint ./include/exchange/* ./src/*
+    - name: Check Coding Style
+      run: |
+          ./scripts/cpplint-check.sh
     
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release

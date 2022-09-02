@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string_view>
+#include <utility>
 
 #include "./order.h"
 #include "./typing.h"
@@ -72,9 +73,10 @@ class Product {
    * database.
    *
    * @param order Specify the target order.
-   * @return The predict quantity if the order be matched.
+   * @return The predict quantity and price if the order be matched.
    */
-  Typing::QuantityType TryMatch(Order const &order) const noexcept;
+  std::pair<Typing::QuantityType, Typing::PriceType> TryMatch(
+      Order const &order) const noexcept;
 
   /**
    * @brief Match the order.

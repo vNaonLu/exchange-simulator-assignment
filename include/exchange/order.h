@@ -30,28 +30,15 @@ enum class TimeInForce {
  * order_id, price and quantity... etc.
  *
  */
-class Order {
+struct Order {
  public:
-  TimeInForce const         time_in_force;
-  Typing::OrderIdType const id;
-  Side                      side;
-  Typing::ProductIdType     product;
-  Typing::PriceType         price;
-  Typing::QuantityType      quantity;
-
- public:
-  /**
-   * @brief Construct a new Order object. Note for the arguments are the
-   * constant properties of an order so the order_id and time_in_force flag are
-   * not mutable.
-   *
-   * @param order_id Specify the target id for this order.
-   * @param tif Specify the time in force flag for this order.
-   */
-  Order(Typing::OrderIdType const &order_id, TimeInForce tif) noexcept
-      : time_in_force{tif}, id{order_id} {}
-
-  ~Order() = default;
+  TimeInForce           time_in_force;
+  Typing::OrderIdType   id;
+  Side                  side;
+  Typing::ProductIdType product;
+  Typing::PriceType     price;
+  Typing::QuantityType  quantity;
+  Typing::TimeType      trade_time;
 };
 
 }  // namespace exchange
