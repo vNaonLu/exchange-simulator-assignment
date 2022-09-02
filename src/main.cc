@@ -5,6 +5,7 @@
 #include <exchange/order.h>
 
 #include <chrono>  // NOLINT [build/c++11]
+#include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -36,7 +37,7 @@ int main(int argc, char **argv) {
 
   exchange::Exchange exch;
   exchange::Matcher  mat(&exch);
-  std::ifstream      ord_file(opts->order_file);
+  std::ifstream      ord_file(opts->order_file.data());
 
   if (!ord_file.is_open()) {
     cerr << "(error) failed to open: " << opts->order_file << endl;
@@ -55,7 +56,7 @@ int main(int argc, char **argv) {
   char            product[100] = {0};
   char            side[5]      = {0};
   while (ord_file.getline(buf, sizeof(buf))) {
-    if (EOF == std::sscanf(buf, "%23c - [%llu] %[^:]: %s %s %d@%f", date,
+    if (EOF == std::sscanf(buf, "%23c - [%llu] %[^:]: %s %s %ld@%f", date,
                            &order.id, tif, product, side, &order.quantity,
                            &order.price)) {
       /// TODO: unlikely
