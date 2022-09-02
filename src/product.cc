@@ -49,9 +49,9 @@ bool Product::Insert(Typing::TimeType time, std::string_view bid_quote,
     /// TODO: likely
     /// TODO: exceptions handle
     auto &quote = it->second;
-    std::sscanf(bid_quote.data(), "%d@%f", &quote.bid_quantity,
+    std::sscanf(bid_quote.data(), "%ld@%f", &quote.bid_quantity,
                 &quote.bid_price);
-    std::sscanf(offer_quote.data(), "%d@%f", &quote.offer_quantity,
+    std::sscanf(offer_quote.data(), "%ld@%f", &quote.offer_quantity,
                 &quote.offer_price);
   }
 

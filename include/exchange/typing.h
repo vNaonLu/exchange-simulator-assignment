@@ -13,11 +13,11 @@ namespace exchange {
  *
  */
 struct Typing {
-  using TimeType      = uint64_t;
+  using TimeType      = unsigned long long;  // NOLINT [runtime/int]
   using ProductIdType = std::string;
-  using OrderIdType   = uint64_t;
+  using OrderIdType   = unsigned long long;  // NOLINT [runtime/int]
   using PriceType     = float;
-  using QuantityType  = int32_t;
+  using QuantityType  = signed long;  // NOLINT [runtime/int]
 };
 
 }  // namespace exchange
