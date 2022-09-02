@@ -32,7 +32,8 @@ bool Matcher::InsertOrder(Order const &order) noexcept {
   return true;
 }
 
-void Matcher::Execute(MatchCallback callback, Typing::TimeType latency) noexcept {
+void Matcher::Execute(MatchCallback    callback,
+                      Typing::TimeType latency) noexcept {
   if (nullptr == callback || nullptr == opaque_) {
     /// TODO: unlikely
     return;
@@ -87,10 +88,10 @@ void Matcher::Execute(MatchCallback callback, Typing::TimeType latency) noexcept
           callback(report);
           product->Match(order);
           /// The left shares are canceled.
-          report.result   = ExecutionReport::kCanceled;
-          report.quantity = order.quantity - mat_qty;
-          report.price    = 0.0;
-          callback(report);
+          // report.result   = ExecutionReport::kCanceled;
+          // report.quantity = order.quantity - mat_qty;
+          // report.price    = 0.0;
+          // callback(report);
         } else {
           /// fail to match the order.
           report.result   = ExecutionReport::kCanceled;

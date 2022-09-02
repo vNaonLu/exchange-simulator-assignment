@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
   }
 
   exchange::Order order;
-  char            buf[1024] = {0};
+  char            buf[1024]    = {0};
   char            date[24]     = {0};
   char            tif[20]      = {0};
   char            product[100] = {0};
@@ -84,27 +84,31 @@ int main(int argc, char **argv) {
     mat.InsertOrder(order);
   }
 
-  mat.Execute([](exchange::ExecutionReport const &rep) {
-    cout << "orderId:";
-    cout << std::setw(12) << std::right << std::setfill(' ') << rep.order_id
-         << " ";
-    switch (rep.result) {
-      case exchange::ExecutionReport::kCanceled:
-        cout << "[canceled]";
-        break;
-      case exchange::ExecutionReport::kFilled:
-        cout << "[filled]";
-        cout << " price=" << std::fixed << std::setprecision(3) << rep.price;
-        cout << " qty=" << rep.quantity;
-        break;
-      case exchange::ExecutionReport::kPartialFilled:
-        cout << "[partial filled]";
-        cout << " price=" << std::fixed << std::setprecision(3) << rep.price;
-        cout << " qty=" << rep.quantity;
-        break;
-    }
-    cout << endl;
-  }, opts->latency);
+  mat.Execute(
+      [](exchange::ExecutionReport const &rep) {
+        cout << "orderId:";
+        cout << std::setw(12) << std::right << std::setfill(' ') << rep.order_id
+             << " ";
+        switch (rep.result) {
+          case exchange::ExecutionReport::kCanceled:
+            cout << "[canceled]";
+            break;
+          case exchange::ExecutionReport::kFilled:
+            cout << "[filled]";
+            cout << " price=" << std::fixed << std::setprecision(3)
+                 << rep.price;
+            cout << " qty=" << rep.quantity;
+            break;
+          case exchange::ExecutionReport::kPartialFilled:
+            cout << "[partial filled]";
+            cout << " price=" << std::fixed << std::setprecision(3)
+                 << rep.price;
+            cout << " qty=" << rep.quantity;
+            break;
+        }
+        cout << endl;
+      },
+      opts->latency);
 
   return EXIT_SUCCESS;
 }
