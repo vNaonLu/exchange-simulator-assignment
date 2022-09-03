@@ -72,7 +72,7 @@ $ ./build/exchange-simulator <latency> <quote_file> <order_file>
     ...
     ```
 
-    Note that `time_in_force` is only accept `IOCOrder` in the current version and `side` is one of the strings of `BUY` or `SELL`.
+    Note that `time_in_force` only accept `IOCOrder` in the current version and `side` is one of the strings of `BUY` or `SELL`.
 
 A simple output may looks like:
 
