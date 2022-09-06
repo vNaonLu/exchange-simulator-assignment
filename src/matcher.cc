@@ -24,8 +24,7 @@ Matcher::Matcher(Exchange *exchange) noexcept
 Matcher::~Matcher() noexcept {}
 
 bool Matcher::InsertOrder(Order const &order) noexcept {
-  if (nullptr == opaque_) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == opaque_)) {
     return false;
   }
   opaque_->orders.emplace_back(order);
@@ -34,8 +33,7 @@ bool Matcher::InsertOrder(Order const &order) noexcept {
 
 void Matcher::Execute(MatchCallback    callback,
                       Typing::TimeType latency) noexcept {
-  if (nullptr == callback || nullptr == opaque_) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == callback || nullptr == opaque_)) {
     return;
   }
   sort(opaque_->orders.begin(), opaque_->orders.end(),
@@ -54,8 +52,7 @@ void Matcher::Execute(MatchCallback    callback,
     /// If the old product is not the target of current order.
     if (nullptr == pid || nullptr == product || *pid != order.product) {
       product = opaque_->exchange->GetProduct(order.product);
-      if (nullptr == product) {
-        /// TODO: unlikey
+      if (UNLIKELY(nullptr == product)) {
         report.result   = ExecutionReport::kCanceled;
         report.price    = 0.0;
         report.quantity = order.quantity;

@@ -38,15 +38,14 @@ Product::~Product() noexcept {}
 
 bool Product::Insert(Typing::TimeType time, std::string_view bid_quote,
                      std::string_view offer_quote) noexcept {
-  if (nullptr == opaque_ || bid_quote.empty() || offer_quote.empty()) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == opaque_ || bid_quote.empty() ||
+               offer_quote.empty())) {
     return false;
   }
   [[maybe_unused]] auto [it, suc] =
       opaque_->quote_board_.emplace(time, detail::Quote{});
 
-  if (suc) {
-    /// TODO: likely
+  if (LIKELY(suc)) {
     /// TODO: exceptions handle
     auto &quote = it->second;
     std::sscanf(bid_quote.data(), "%ld@%f", &quote.bid_quantity,
@@ -59,8 +58,7 @@ bool Product::Insert(Typing::TimeType time, std::string_view bid_quote,
 }
 
 void Product::SetTimestamp(Typing::TimeType time) noexcept {
-  if (nullptr != opaque_) {
-    /// TODO: likely
+  if (LIKELY(nullptr != opaque_)) {
     auto find = opaque_->quote_board_.upper_bound(time);
     if (find != opaque_->quote_board_.begin()) {
       opaque_->set_started = true;
@@ -72,8 +70,7 @@ void Product::SetTimestamp(Typing::TimeType time) noexcept {
 }
 
 Typing::TimeType Product::Next() const noexcept {
-  if (nullptr != opaque_) {
-    /// TODO: likely
+  if (LIKELY(nullptr != opaque_)) {
     if (!opaque_->set_started) {
       return opaque_->quote_board_.begin()->first;
     } else {
@@ -85,8 +82,7 @@ Typing::TimeType Product::Next() const noexcept {
 }
 
 Typing::TimeType Product::Iterate() noexcept {
-  if (nullptr == opaque_) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == opaque_)) {
     return 0;
   }
   /// modify iterations
@@ -103,8 +99,7 @@ Typing::TimeType Product::Iterate() noexcept {
 
 std::pair<Typing::QuantityType, Typing::PriceType> Product::TryMatch(
     Order const &order) const noexcept {
-  if (nullptr == opaque_ || !opaque_->set_started) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == opaque_ || !opaque_->set_started)) {
     return std::make_pair(0, 0.0);
   }
   /// Try to match the order but not effect on map
@@ -120,8 +115,7 @@ std::pair<Typing::QuantityType, Typing::PriceType> Product::TryMatch(
 }
 
 void Product::Match(Order const &order) noexcept {
-  if (nullptr == opaque_ || !opaque_->set_started) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == opaque_ || !opaque_->set_started)) {
     return;
   }
   /// match the order and actually effect on map

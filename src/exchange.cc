@@ -24,8 +24,7 @@ Exchange::Exchange() noexcept : opaque_{std::make_unique<Opaque>()} {}
 Exchange::~Exchange() noexcept {}
 
 bool Exchange::Load(std::string_view file) noexcept {
-  if (nullptr == opaque_) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == opaque_)) {
     return false;
   }
 
@@ -44,8 +43,7 @@ bool Exchange::Load(std::string_view file) noexcept {
     if (nullptr == product) {
       auto [it, insert] =
           opaque_->product_board.emplace(id, std::make_unique<Product>());
-      if (!insert) {
-        /// TODO: unlikely
+      if (UNLIKELY(!insert)) {
         return false;
       }
       product = it->second.get();
@@ -60,8 +58,7 @@ bool Exchange::Load(std::string_view file) noexcept {
 
 Product *Exchange::GetProduct(
     Typing::ProductIdType const &product_id) noexcept {
-  if (nullptr == opaque_) {
-    /// TODO: unlikely
+  if (UNLIKELY(nullptr == opaque_)) {
     return nullptr;
   }
 
