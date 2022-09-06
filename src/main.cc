@@ -56,10 +56,9 @@ int main(int argc, char **argv) {
   char            product[100] = {0};
   char            side[5]      = {0};
   while (ord_file.getline(buf, sizeof(buf))) {
-    if (EOF == std::sscanf(buf, "%23c - [%llu] %[^:]: %s %s %ld@%f", date,
-                           &order.id, tif, product, side, &order.quantity,
-                           &order.price)) {
-      /// TODO: unlikely
+    if (UNLIKELY(EOF == std::sscanf(buf, "%23c - [%llu] %[^:]: %s %s %ld@%f",
+                                    date, &order.id, tif, product, side,
+                                    &order.quantity, &order.price))) {
       cerr << "(error) failed to parse order file!" << endl;
       return EXIT_FAILURE;
     }
@@ -151,8 +150,7 @@ Typing::TimeType ConvertTime(char const *time) noexcept {
       std::sscanf(time, "%4d-%2d-%2d %2d:%2d:%2d.%3d", &t.tm_year, &t.tm_mon,
                   &t.tm_mday, &t.tm_hour, &t.tm_min, &t.tm_sec, &ms);
 
-  if (res == EOF) {
-    /// TODO: unlikely
+  if (UNLIKELY(res == EOF)) {
     return 0;
   }
 
